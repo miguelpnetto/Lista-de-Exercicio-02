@@ -5,31 +5,31 @@ class ContaCorrente {
     #historico
 
     constructor(numeroConta, saldoInicial, limite) {
-        if (saldoInicial < 0) {
-            throw new Error("O saldo inicial não pode ser negativo.") // Verifica se o saldo inicial é negativo
-        } else {
-            this.#numeroConta = numeroConta
-        }
-        if (limite < 0) {
-            throw new Error("O limite não pode ser negativo.")  // Verifica se o limite é negativo
-        } else {
-            this.#limite = limite
-        }
-        this.#saldo = saldoInicial
-        this.#historico = []
+        this.numeroConta = numeroConta
+        this.limite = limite
+        this.saldo = saldoInicial
+        this.historico = []
     }
 
     get numeroConta() {
         return this.#numeroConta
     }
     set numeroConta(numeroConta) {
-        this.#numeroConta = numeroConta
+        if (numeroConta && typeof numeroConta === "string") { // Verifica se o número da conta é uma string não vazia
+            this.#numeroConta = numeroConta
+        } else {
+            throw new Error("Número da conta inválido.")
+        }
     }
     get saldo() {
         return this.#saldo
     }
     set saldo(saldo) {
-        this.#saldo = saldo
+        if (saldo >= 0) {
+            this.#saldo = saldo
+        } else {
+            throw new Error("O saldo não pode ser negativo.")
+        }
     }
     get historico() {
         return this.#historico
@@ -43,6 +43,8 @@ class ContaCorrente {
     set limite(limite) {
         if (limite >= 0) {
             this.#limite = limite
+        } else {
+            throw new Error("O limite não pode ser negativo.")
         }
     }
 
@@ -57,7 +59,7 @@ class ContaCorrente {
 
     sacar(valor) {  // Método para realizar um saque, verificando o saldo e o limite
         if (valor > 0) {
-            if (this.#saldo + this.#limite >= valor) {
+            if (this.#saldo >= valor) {
                 this.#saldo -= valor
                 this.#historico.push(`Saque: R$ ${valor.toFixed(2)}`)
             } else {
@@ -70,7 +72,7 @@ class ContaCorrente {
 
     transferir(valor, contaDestino) {  // Método para realizar uma transferência, verificando o saldo e o limite
         if (valor > 0) {
-            if (this.#saldo + this.#limite >= valor) {
+            if (this.#saldo >= valor) {
                 this.sacar(valor)
                 contaDestino.depositar(valor)
                 this.#historico.push(`Transferência: R$ ${valor.toFixed(2)} para a conta ${contaDestino.numeroConta}`)
@@ -86,7 +88,7 @@ class ContaCorrente {
         console.log(`Histórico da Conta ${this.#numeroConta}:`)
         this.#historico.forEach((transacao, index) => {
             console.log(`${index + 1}. ${transacao}`)
-        }) 
+        })
     }
 
     toString() {  // Método para exibir as informações da conta de forma legível
@@ -97,9 +99,19 @@ class ContaCorrente {
     }
 }
 
-let conta1 = new ContaCorrente("12345-6", 1000, 5000)
+let conta1 = new ContaCorrente("12345-6", 500, 1500)
 
-conta1.depositar(500)
-conta1.sacar(200)
-conta1.exibirHistorico()
-console.log(conta1.toString())
+try {
+    conta1.depositar(100)
+    conta1.sacar(200)
+    conta1.exibirHistorico()
+    console.log(conta1.toString())
+
+    conta2 = new ContaCorrente("65432-1", 300, 1000)
+    conta1.transferir(400, conta2)
+    conta1.exibirHistorico()
+    console.log(conta1.toString())
+    console.log(conta2.toString())
+} catch (error) {
+    console.error(error.message)
+}
