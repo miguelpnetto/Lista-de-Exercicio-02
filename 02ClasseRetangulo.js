@@ -1,10 +1,10 @@
 class Retangulo {
     #base
     #altura
-    
+
     constructor(base, altura) {
-        this.#base = base
-        this.#altura = altura
+        this.base = base
+        this.altura = altura
     }
 
     // get e set para a base
@@ -31,7 +31,7 @@ class Retangulo {
     }
 
     // métodos para calcular a área, perímetro e verificar se é um quadrado
-    calcularArea = () => this.#base * this.#altura 
+    calcularArea = () => this.#base * this.#altura
     calcularPerimetro = () => 2 * (this.#base + this.#altura)
     ehQuadrado = () => this.#base === this.#altura
 
@@ -54,10 +54,14 @@ class Retangulo {
     Tipo: ${this.ehQuadrado() ? "Quadrado" : "Retângulo"} `
 }
 
-formato1 = new Retangulo(4,6)
-console.log(formato1.toString())
-formato1.redimensionar(2)
-console.log(formato1.toString())
+try {
+    formato1 = new Retangulo(3, 5)
+    console.log(formato1.toString())
+    formato1.redimensionar(2)
+    console.log(formato1.toString())
+} catch (error) {
+    console.log(error.message)
+}
 
-formato2 = new Retangulo(5,5)
+formato2 = new Retangulo(5, 5)
 console.log(formato2.toString())
