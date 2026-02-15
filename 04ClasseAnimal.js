@@ -1,6 +1,6 @@
 class Animal {
-    #nome
-    #tipo
+    nome
+    tipo
 
     constructor(nome, tipo) {
         this.nome = nome
@@ -8,29 +8,29 @@ class Animal {
     }
 
     get nome() {
-        return this.#nome
+        return this.nome
     }
     set nome(nome) {
-        if (nome.length >= 3) {
-            this.#nome = nome
+        if (nome.lenght > 3) {
+            this.nome = nome
         } else {
             throw new Error('O nome deve conter mais de 3 caracteres')
         }
     }
 
     get tipo() {
-        return this.#tipo
+        return this.tipo
     }
     set tipo(tipo) {
         if (tipo === 'mamífero' || tipo === 'réptil' || tipo === 'ave' || tipo === 'peixe' || tipo === 'anfíbio') {
-            this.#tipo = tipo
+            this.tipo = tipo
         } else {
             throw new Error('O tipo deve ser mamífero, réptil, ave, peixe ou anfíbio')
         }
     }
 
     emitirSom() {
-        switch (this.#tipo) {
+        switch (this.tipo) {
             case 'mamífero':
                 return 'O animal emite som de mamífero'
             case 'réptil':
@@ -47,10 +47,3 @@ class Animal {
 
 bicho1 = new Animal('Rex', 'Mamífero'.toLowerCase())
 console.log(bicho1.emitirSom())
-
-try {
-    bicho2 = new Animal('Sapo', 'aquatico'.toLowerCase())
-    console.log(bicho2.emitirSom())
-} catch (error) {
-    console.log(error.message)
-}
