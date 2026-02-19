@@ -1,3 +1,5 @@
+const esperar = (ms) => new Promise(resolve => setTimeout(resolve, ms))
+
 class Personagem {
     constructor(nome, pontosVida, forca) {
         if (new.target === Personagem) {
@@ -23,7 +25,7 @@ class Personagem {
 
     ganharXP = (quantidade) => {
         this.xp += quantidade
-        console.log(`${this.nome} ganhou ${quantidade} de XP! Total: ${this.xp}`)
+        console.log(`✨ ${this.nome} ganhou ${quantidade} de XP! Total: ${this.xp}`)
 
         if (this.xp >= 100) this.levelUp()
     }
@@ -40,7 +42,7 @@ class Personagem {
         }
 
         console.log(`
-                --- SUBIU DE NÍVEL ---
+                --- 🆙 SUBIU DE NÍVEL 🆙 ---
             ${this.nome} agora está no nivel ${this.level}
             Subiu força: ${this.forcaInicial} | Subiu a vida: ${this.vidaInicial}`)
     }
@@ -61,9 +63,9 @@ class Guerreiro extends Personagem {
         if (forcaAtaque > defesa) {
             const danoTomado = forcaAtaque - defesa
             this.pontosVida -= danoTomado
-            console.log(`${this.nome} tentou defender, mas ainda recebeu ${danoTomado} de dano.`)
+            console.log(`🛡️ ${this.nome} tentou defender, mas ainda recebeu ${danoTomado} de dano. 🛡️`)
         } else {
-            console.log(`${this.nome} defendeu o ataque com sucesso!`)
+            console.log(`🛡️ ${this.nome} defendeu o ataque com sucesso! 🛡️`)
         }
     }
 }
@@ -83,9 +85,9 @@ class Mago extends Personagem {
         if (forcaAtaque > defesa) {
             const danoTomado = forcaAtaque - defesa
             this.pontosVida -= danoTomado
-            console.log(`${this.nome} tentou defender, mas ainda recebeu ${danoTomado} de dano.`)
+            console.log(`🛡️ ${this.nome} tentou defender, mas ainda recebeu ${danoTomado} de dano. 🛡️`)
         } else {
-            console.log(`${this.nome} defendeu o ataque com sucesso!`)
+            console.log(`🛡️ ${this.nome} defendeu o ataque com sucesso! 🛡️`)
         }
     }
 
@@ -93,14 +95,14 @@ class Mago extends Personagem {
         if (alvo instanceof Personagem) {
             const dano = 60
             alvo.pontosVida -= dano
-            console.log(`${this.nome} lançou um feitiço em ${alvo.nome} causando ${dano} de dano.`)
+            console.log(`🔥 ${this.nome} lançou um feitiço em ${alvo.nome} causando ${dano} de dano. 🔥`)
         }
     }
 
     curar = (personagem) => {
         const cura = 40
         personagem.pontosVida += cura
-        console.log(`${this.nome} se curou, recuperando ${cura} pontos de vida.`)
+        console.log(`💚 ${this.nome} se curou, recuperando ${cura} pontos de vida. 💚`)
     }
 }
 
@@ -121,7 +123,7 @@ class Item {
                     break
                 case 'pocao':
                     personagem.pontosVida += this.efeito
-                    console.log(`${personagem.nome} usou ${this.nome} e recuperou ${this.efeito} pontos de vida.`)
+                    console.log(`🧪 ${personagem.nome} usou ${this.nome} e recuperou ${this.efeito} pontos de vida. 🧪`)
                     break
                 default:
                     console.log(`Efeito desconhecido para o item ${this.nome}.`)
@@ -142,10 +144,14 @@ class Batalha {
         }
     }
 
-    iniciar = () => {
-        console.log(`A batalha entre ${this.personagem1.nome} e ${this.personagem2.nome} começou!`)
+    iniciar = async () => {
+        console.log(`⚔️ A batalha entre ${this.personagem1.nome} e ${this.personagem2.nome} começou! ⚔️`)
+        console.log("--------------------------------------------------")
         // A batalha continua até que um dos personagens tenha seus pontos de vida reduzidos a zero ou menos
         while (this.personagem1.pontosVida > 0 && this.personagem2.pontosVida > 0) {
+
+            await esperar(1200)
+
             const chanceDefesa = Math.random() < 0.4 // 40% de chance de defesa bem-sucedida
             const chanceCurar = Math.random() < 0.1 // 10% de chance de cura bem-sucedida 
             const usarItem = Math.random() < 0.3 // 30% de chance de usar um item durante a batalha  
@@ -156,10 +162,11 @@ class Batalha {
             } else {
                 const dano = this.personagem1.atacar()
                 this.personagem2.pontosVida -= dano
-                console.log(`${this.personagem1.nome} causou ${dano} de dano em ${this.personagem2.nome}`)
+                console.log(`💥 ${this.personagem1.nome} causou ${dano} de dano em ${this.personagem2.nome} 💥`)
             }
             if (this.personagem2.pontosVida <= 0) {
-                console.log(`${this.personagem2.nome} foi derrotado! ${this.personagem1.nome} venceu a batalha.`)
+                console.log(`💀 ${this.personagem2.nome} foi derrotado! 🏆 ${this.personagem1.nome} venceu a batalha.`)
+                await esperar(1000)
                 this.personagem1.ganharXP(100)
                 break
             } else if (usarItem) {
@@ -171,6 +178,8 @@ class Batalha {
                     item.usar(this.personagem1)
                 }
             }
+
+            await esperar(800)
             // O mago tem uma chance de lançar um feitiço ou atacar normalmente
             if (chanceDefesa) {
                 this.personagem1.defender(this.personagem2)
@@ -180,11 +189,12 @@ class Batalha {
                 } else {
                     const dano = this.personagem2.atacar()
                     this.personagem1.pontosVida -= dano
-                    console.log(`${this.personagem2.nome} causou ${dano} de dano em ${this.personagem1.nome}`)
+                    console.log(`💥 ${this.personagem2.nome} causou ${dano} de dano em ${this.personagem1.nome} 💥`)
                 }
             }
             if (this.personagem1.pontosVida <= 0) {
-                console.log(`${this.personagem1.nome} foi derrotado! ${this.personagem2.nome} venceu a batalha.`)
+                console.log(`💀 ${this.personagem1.nome} foi derrotado! 🏆 ${this.personagem2.nome} venceu a batalha.`)
+                await esperar(500)
                 this.personagem2.ganharXP(100)
                 break
             }
@@ -204,11 +214,15 @@ class Batalha {
     }
 }
 
-try {
-    const guerreiro1 = new Guerreiro('Aragorn', 100, 20)
-    const mago1 = new Mago('Gandalf', 80, 30)
-    const batalha = new Batalha(guerreiro1, mago1)
-    batalha.iniciar()
-} catch (error) {
-    console.error(error.message)
+const rodarBatalha = async () => {
+    try {
+        const guerreiro1 = new Guerreiro('Aragorn', 100, 20)
+        const mago1 = new Mago('Gandalf', 80, 30)
+        const batalha = new Batalha(guerreiro1, mago1)
+        batalha.iniciar()
+    } catch (error) {
+        console.error(error.message)
+    }
 }
+
+rodarBatalha()
